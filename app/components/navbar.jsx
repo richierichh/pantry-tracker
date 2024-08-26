@@ -10,31 +10,29 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await logout();
-    router.push('/auth/login');
+    router.push('/LandingPage');
   };
 
   return (
-    <nav className='flex flex-row gap-x-2 w-full z-20 fixed top-0 left-0 h-12 border-b place-content-center items-center bg-gray-200'>
-      {user ? (
-        <button onClick={handleLogout} className='text-sm text-blue-600 underline'>
-          Logout
-        </button>
-      ) : (
-        <>
-          <a href='/home'> 
-            Pantry
-          </a>
-          <a>
-            Recipes
-          </a>
-          <Link href='/login' className='text-sm text-blue-600 underline'>
-            Login
+    <nav className="flex justify-center items-center max-w-lg mx-auto pt-4 mt-6 bg-gray-100 rounded-full shadow-md">
+    <div className="flex space-x-8 items-center mb-4">
+        <a href='/home' className="text-black font-medium hover:text-blue-600"> 
+          Pantry
+        </a>
+        <a href='#' className="text-black font-medium hover:text-blue-600">
+          Recipes
+        </a>
+        {user && (
+          <button onClick={handleLogout} className="text-black font-medium hover:text-blue-600">
+            Log Out
+          </button>
+        )}
+        {!user && (
+          <Link href='/' className="text-black font-medium hover:text-blue-600">
+            Log Out
           </Link>
-          <Link href='/register' className='text-sm text-blue-600 underline'>
-            Register new account
-          </Link>
-        </>
-      )}
+        )}
+      </div>
     </nav>
   );
 };

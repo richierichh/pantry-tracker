@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react'
 import {Link} from '@mui/material'
-import { doSignInWithEmailAndPassword, doSignInWithGoogle,doCreateUserWithEmailAndPassword } from '../../firebase/auth'
+import { doSignInWithEmailAndPassword, doSignInWithGoogle,doCreateUserWithEmailAndPassword } from '../firebase/auth'
 import { useAuth } from '../contexts/authcontexts'
 import { useRouter } from "next/navigation";
 
