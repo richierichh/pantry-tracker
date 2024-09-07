@@ -4,7 +4,6 @@ import { Link } from '@mui/material';
 import { useRouter } from 'next/navigation'; // Fixed to 'next/router' for accuracy
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from '../firebase/auth';
 import { useAuth } from '../contexts/authcontexts';
-import Navbar from "../components/navbar";
 
 const Login = () => {
   const router = useRouter();

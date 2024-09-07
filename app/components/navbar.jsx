@@ -13,15 +13,16 @@ const Navbar = () => {
     router.push('/LandingPage');
   };
 
+
   return (
     <nav className="flex justify-center items-center max-w-lg mx-auto pt-4 mt-6 bg-gray-100 rounded-full shadow-md">
     <div className="flex space-x-8 items-center mb-4">
-        <a href='/home' className="text-black font-medium hover:text-blue-600"> 
+        <Link href='/home' className="text-black font-medium hover:text-blue-600"> 
           Pantry
-        </a>
-        <a href='#' className="text-black font-medium hover:text-blue-600">
+        </Link>
+        <Link href='/recipes' className="text-black font-medium hover:text-blue-600">
           Recipes
-        </a>
+        </Link>
         {user && (
           <button onClick={handleLogout} className="text-black font-medium hover:text-blue-600">
             Log Out
