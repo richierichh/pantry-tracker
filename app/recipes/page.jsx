@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import TableDemo from '../components/table'; // Import your table component
+import { parseRecipes } from '../components/utils';
 
 const RecipePage = () => {
   const [recipes, setRecipes] = useState(null); // State to hold fetched recipes
@@ -63,7 +64,26 @@ const RecipePage = () => {
       {recipes && (
         <div className="mt-6 p-4 bg-gray-100 rounded shadow">
           <h3 className="text-lg font-bold mb-2">Generated Recipes:</h3>
-          <p>{recipes}</p>
+          {/* Dynamically format and render recipes */}
+          {parseRecipes(recipes).length === 0 ? (
+            <p>{recipes}</p>
+          ) : (
+            <div className="space-y-6">
+              {parseRecipes(recipes).map((recipe, idx) => (
+                <div key={idx} className="border rounded-lg p-4 shadow bg-white">
+                  <h2 className="text-xl font-bold mb-2">{recipe.name}</h2>
+                  <h3 className="font-semibold">Ingredients:</h3>
+                  <ul className="list-disc list-inside mb-2">
+                    {recipe.ingredients.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                  <h3 className="font-semibold">Instructions:</h3>
+                  <p>{recipe.instructions}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
