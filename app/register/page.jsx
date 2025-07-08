@@ -112,7 +112,13 @@ const Register = () => {
                         </button>
                         <div className="text-sm text-center">
                             Already have an account? {'   '}
-                            <Link to={'/login'} className="text-center text-sm hover:underline font-bold">Continue</Link>
+                            <button
+                              type="button"
+                              onClick={() => Router.push('/login')}
+                              className="text-center text-sm hover:underline font-bold text-blue-600 bg-transparent border-none cursor-pointer"
+                            >
+                              Continue
+                            </button>
                         </div>
                     </form>
                 </div>

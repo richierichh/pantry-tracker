@@ -34,7 +34,7 @@ const columns = [
   { name: "ACTIONS", uid: "actions" }
 ];
 
-export default function TableDemo() {
+export default function TableDemo({ onPantryItemsChange }) {
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -429,6 +429,18 @@ export default function TableDemo() {
 
     fetchData();
   }, []);
+
+  // Call onPantryItemsChange whenever tableData changes
+  useEffect(() => {
+    if (onPantryItemsChange) {
+      console.log('tableData:', tableData);
+      const pantryItems = tableData
+        .map(item => item.product)
+        .filter(product => typeof product === 'string' && product.trim() !== '');
+      console.log('pantryItems sent to parent:', pantryItems);
+      onPantryItemsChange(pantryItems);
+    }
+  }, [tableData, onPantryItemsChange]);
 
   return (
     <>

@@ -12,7 +12,7 @@ export const generateRecipe = async (pantryItems) => {
     }
     const itemsList = items.join(", ");
     console.log(itemsList)
-    return `I have ${itemsList} in my pantry. What can I cook with these ingredients?`;
+    return `I have ${itemsList} in my pantry. Please suggest recipes that use ONLY these ingredients (and common seasonings/condiments if needed), and do NOT include any other main ingredients.`;
   };
 
   const prompt = createPrompt(pantryItems);
@@ -20,7 +20,7 @@ export const generateRecipe = async (pantryItems) => {
   try {
     const chatCompletion = await openai.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
     });
 
     return chatCompletion.choices[0].message.content;

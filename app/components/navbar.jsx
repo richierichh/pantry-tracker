@@ -20,9 +20,9 @@ const Navbar = () => {
         <Link href='/home' className="text-black font-medium hover:text-blue-600"> 
           Pantry
         </Link>
-        <Link href='/recipes' className="text-black font-medium hover:text-blue-600">
+        {/* <Link href='/recipes' className="text-black font-medium hover:text-blue-600">
           Recipes
-        </Link>
+        </Link> */}
         {user && (
           <button onClick={handleLogout} className="text-black font-medium hover:text-blue-600">
             Log Out

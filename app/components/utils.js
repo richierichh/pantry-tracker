@@ -3,23 +3,68 @@ export function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Parses a ChatGPT recipe string into structured recipe objects
+// Improved parser for more flexible recipe formats
 export function parseRecipes(recipeString) {
-  // Remove any leading text before the first recipe
-  const start = recipeString.search(/\d+\.\s+\*\*/);
-  const trimmed = start >= 0 ? recipeString.slice(start) : recipeString;
+  if (!recipeString || typeof recipeString !== 'string') return [];
 
-  // Regex to match each recipe block
-  const recipeRegex = /\d+\.\s+\*\*(.+?)\*\*:\s*- Ingredients: (.+?)\.\s*- Instructions: (.+?)(?=(?:\d+\.|\n|$))/gs;
-  const recipes = [];
-  let match;
-  while ((match = recipeRegex.exec(trimmed)) !== null) {
-    const [_, name, ingredients, instructions] = match;
-    recipes.push({
-      name: name.trim(),
-      ingredients: ingredients.split(',').map(i => i.trim()),
-      instructions: instructions.trim().replace(/\s+/g, ' ')
-    });
-  }
-  return recipes;
+  // Remove ** and split by numbered recipes
+  const recipeBlocks = recipeString
+    .replace(/\*\*/g, '')
+    .split(/\d+\.\s+/)
+    .map(block => block.trim())
+    .filter(block => block && !/^certainly!?/i.test(block) && !/here (are|is) (a|some) (few )?simple recipes?/i.test(block));
+
+  const recipes = recipeBlocks.map(block => {
+    // Extract the name (first line or before the first colon)
+    const nameMatch = block.match(/^([^:]+):?/);
+    const name = nameMatch ? nameMatch[1].trim() : 'Recipe';
+
+    // Find - Ingredients: and - Instructions:
+    const ingredients = [];
+    const instructions = [];
+    const lines = block.split(/\r?\n/).map(l => l.trim());
+    let inIngredients = false;
+    let inInstructions = false;
+    for (let line of lines) {
+      if (/^-\s*Ingredients?:/i.test(line)) {
+        inIngredients = true;
+        inInstructions = false;
+        continue;
+      }
+      if (/^-\s*Instructions?:/i.test(line)) {
+        inIngredients = false;
+        inInstructions = true;
+        continue;
+      }
+      if (inIngredients && line.startsWith('-') && !/^-\s*Instructions?:/i.test(line)) {
+        ingredients.push(line.replace(/^-\s*/, ''));
+      } else if (inInstructions && line.startsWith('-')) {
+        instructions.push(line.replace(/^-\s*/, ''));
+      } else if (inInstructions && line && !line.startsWith('-')) {
+        instructions.push(line);
+      }
+    }
+    // If no explicit - Ingredients: section, try to extract from the first line after the name
+    if (ingredients.length === 0) {
+      const ingMatch = block.match(/Ingredients?:\s*([^\n]+)/i);
+      if (ingMatch) {
+        ingredients.push(...ingMatch[1].split(',').map(i => i.trim()).filter(Boolean));
+      }
+    }
+    // If no explicit - Instructions: section, try to extract from the block
+    if (instructions.length === 0) {
+      const instrMatch = block.match(/Instructions?:\s*([\s\S]+)/i);
+      if (instrMatch) {
+        instructions.push(instrMatch[1].trim());
+      }
+    }
+    return {
+      name,
+      ingredients,
+      instructions: instructions.join('\n')
+    };
+  });
+
+  // Filter out any blocks that are not real recipes
+  return recipes.filter(r => r.name && (r.ingredients.length > 0 || r.instructions.length > 10));
 }
