@@ -15,9 +15,9 @@ export function parseRecipes(recipeString) {
     .filter(block => block && !/^certainly!?/i.test(block) && !/here (are|is) (a|some) (few )?simple recipes?/i.test(block));
 
   const recipes = recipeBlocks.map(block => {
-    // Extract the name (first line or before the first colon)
-    const nameMatch = block.match(/^([^:]+):?/);
-    const name = nameMatch ? nameMatch[1].trim() : 'Recipe';
+    // Extract name before Ingredients or colon
+    const nameMatch = block.match(/^(.+?)(?:\n|Ingredients:|:)/i);
+    const name = nameMatch ? nameMatch[1].replace(/^[\d.\s]+/, '').trim() : 'Recipe';
 
     // Find - Ingredients: and - Instructions:
     const ingredients = [];
@@ -58,10 +58,11 @@ export function parseRecipes(recipeString) {
         instructions.push(instrMatch[1].trim());
       }
     }
+
     return {
       name,
       ingredients,
-      instructions: instructions.join('\n')
+      instructions
     };
   });
 

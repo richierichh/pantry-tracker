@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import Navbar from '../components/navbar'; // Ensure the correct path
 import TableDemo from '../components/table';
-import { parseRecipes } from '../components/utils';
 
 const Home = () => {
   const [recipes, setRecipes] = useState(null);
@@ -62,29 +61,33 @@ const Home = () => {
       {loading && <p>Loading recipes...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {recipes && (
-        <div className="mt-6 p-4 bg-gray-100 rounded shadow">
-          <h3 className="text-lg font-bold mb-2">Generated Recipes:</h3>
-          {parseRecipes(recipes).length === 0 ? (
-            <p>{recipes}</p>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {parseRecipes(recipes).map((recipe, idx) => (
-                <div key={idx} className="border rounded-lg p-4 shadow bg-white flex flex-col">
-                  <h2 className="text-xl font-bold mb-2">{recipe.name}</h2>
-                  <h3 className="font-semibold">Ingredients:</h3>
-                  <ul className="list-disc list-inside mb-2">
-                    {recipe.ingredients.map((item, i) => (
-                      <li key={i}>{item}</li>
-                    ))}
-                  </ul>
-                  <h3 className="font-semibold">Instructions:</h3>
-                  <p>{recipe.instructions}</p>
-                </div>
+  <div className="mt-6 p-4 bg-gray-100 rounded shadow">
+    <h3 className="text-lg font-bold mb-2">Generated Recipes:</h3>
+    {recipes.length === 0 ? (
+      <p>No recipes found.</p>
+    ) : (
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {recipes.map((recipe, idx) => (
+          <div key={idx} className="border rounded-lg p-4 shadow bg-white flex flex-col">
+            <h2 className="text-xl font-bold mb-2">{recipe.name}</h2>
+            <h3 className="font-semibold">Ingredients:</h3>
+            <ul className="list-disc list-inside mb-2">
+              {recipe.ingredients.map((item, i) => (
+                <li key={i}>{item}</li>
               ))}
-            </div>
-          )}
-        </div>
-      )}
+            </ul>
+            <h3 className="font-semibold">Instructions:</h3>
+            <ol className="list-decimal list-inside">
+              {recipe.instructions.map((step, i) => (
+                <li key={i}>{step}</li>
+              ))}
+            </ol>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
     </div>
   );
 };
